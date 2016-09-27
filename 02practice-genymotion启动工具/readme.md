@@ -7,4 +7,5 @@ start_vm.py refresh
 
 vms.ini 缓存的文件
 注：第一次启动读取虚拟机列表会比较慢 
+
 ![预览](preview.png)
