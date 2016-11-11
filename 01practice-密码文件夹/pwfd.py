@@ -4,8 +4,8 @@ Created on 2015年5月7日
 @author: Administrator
 '''
 import os;
-from _overlapped import NULL
 import sys
+from _overlapped import NULL
 
 
 def goToPwdFolder(pwd):

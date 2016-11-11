@@ -3,7 +3,6 @@ Created on 2015-8-21
 @author: Lexue
 '''
 import os
-from os.path import sys
 import time
 #args = sys.argv;
 #args = args[1:];
