@@ -42,8 +42,9 @@ def read_cache_vm_list():
     try:
         f = open(CACHE_FILE, 'r')
         line = f.readline()
-        if line.index(SPLITTER) != -1:
-            return line.split(SPLITTER)
+        ds = line.split(SPLITTER)
+        if (len(ds[0].strip()) != 0):
+            return ds
     except:
         pass
     return []
@@ -69,15 +70,22 @@ if __name__ == "__main1__":
 
 
 def read_a_num():
-    return input()
+    try:
+        cha = input()
+        return cha
+    except:
+        exit(-1)
 
 
 def start_vm(num):
-    if type(num) is not int or (num < 0 or num >= len(vms)):
-        print_no_newline('invalid num:')
-    else:
-        open_vm(vms[num])
-        return True
+    try:
+        num = int(num)
+        if 0 <= num < len(vms):
+            open_vm(vms[num])
+            return True
+    except:
+        pass
+    print_no_newline('invalid num:')
     return False
 
 
@@ -89,7 +97,6 @@ def print_no_newline(str):
 # main
 if __name__ == "__main__":
     vms = read_cache_vm_list()
-
     if len(vms) == 0 or (len(sys.argv) > 1 and sys.argv[1] == "refresh"):
         vms = get_vm_list_and_cache()
 
