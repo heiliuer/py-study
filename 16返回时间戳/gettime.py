@@ -3,6 +3,7 @@
 import os
 import sys
 from time import gmtime, strftime
+import time
 
 
 def print_help():
@@ -25,14 +26,17 @@ def read_as_int(arg):
     return None
 
 
-formaters = [("%Y%m%d%H%M%S", "20161213161512"), ("%Y-%m-%d-%H-%M", "20161213161512"),
-             ("%Y-%m-%d-%H-%M", "20161213161512")]
+formaters = [("%Y%m%d%H%M%S", "20161213165210"), ("$QQ", "1481648398133 时间戳"), ("%Y%m%d%H%M", "201612131652"),
+             ("%Y-%m-%d-%H-%M", "2016-12-13-16-52")]
 
 
 def print_time(type=0):
     if type < 0 or type > len(formaters) - 1:
         print("invalid type")
-    print(strftime(formaters[type][0], gmtime()))
+    else:
+        mtime = str(round(time.time() * 1000))
+        ftime = strftime(formaters[type][0], gmtime())
+        print(ftime.replace('$QQ', mtime))
 
 
 def handle(args):
@@ -41,7 +45,7 @@ def handle(args):
         if type is None:
             print_help()
             return
-        print_time(type-1)
+        print_time(type - 1)
     else:
         print_time()
 
