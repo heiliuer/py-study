@@ -42,9 +42,8 @@ def read_cache_vm_list():
     try:
         f = open(CACHE_FILE, 'r')
         line = f.readline()
-        ds = line.split(SPLITTER)
-        if (len(ds[0].strip()) != 0):
-            return ds
+        if line.index(SPLITTER) != -1:
+            return line.split(SPLITTER)
     except:
         pass
     return []
@@ -69,23 +68,16 @@ if __name__ == "__main1__":
     open_vm("Custom Phone - 6.0.0 - API 23 - 768x1280")
 
 
-def read_a_num():
-    try:
-        cha = input()
-        return cha
-    except:
-        exit(-1)
+def read_a_char():
+    return input()
 
 
 def start_vm(num):
-    try:
-        num = int(num)
-        if 0 <= num < len(vms):
-            open_vm(vms[num])
-            return True
-    except:
-        pass
-    print_no_newline('invalid num:')
+    if type(num) is not int or (num < 0 or num >= len(vms)):
+        print_no_newline('invalid num:')
+    else:
+        open_vm(vms[num])
+        return True
     return False
 
 
@@ -97,6 +89,7 @@ def print_no_newline(str):
 # main
 if __name__ == "__main__":
     vms = read_cache_vm_list()
+
     if len(vms) == 0 or (len(sys.argv) > 1 and sys.argv[1] == "refresh"):
         vms = get_vm_list_and_cache()
 
@@ -108,6 +101,12 @@ if __name__ == "__main__":
         print("choose a vm:")
         for i, vm in enumerate(vms):
             print("  %d . %s" % (i, vm))
-        print_no_newline('num:')
-        while not start_vm(read_a_num()):
-            pass
+        print_no_newline('enter num (enter r/R to refresh vm list):')
+        ch = read_a_char()
+        if ch == 'r' or ch == 'R':
+            print_no_newline('refreshing...')
+            get_vm_list_and_cache()
+            print(' done!')
+        else:
+            while not start_vm(ch):
+                pass
