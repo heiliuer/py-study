@@ -33,12 +33,24 @@ def find_fuzhen():
     nrows = table.nrows
 
 
-if __name__ == "__main__":
-    data = xlrd.open_workbook('基本公共卫生服务(1).xls')
+def handle_chuzhe():
+    data = xlrd.open_workbook('初诊记录(1).xls')
     table = data.sheets()[0]
     nrows = table.nrows
-    write()
     for i in range(nrows):
         row_data = table.row_values(i)
-        getZhongYun(row_data[1])
+        yunzhou = float(row_data[50])
+        bianhao = int(row_data[0])
+        yisheng = row_data[148]
+        riqi = row_data[149]
+        if yunzhou <= 12:
+            print(bianhao, yunzhou, yisheng, riqi, len(row_data))
+            print(row_data)
+        for j, data in enumerate(row_data):
+            if str(data).find('尿H') > -1:
+                pass
         print()
+
+
+if __name__ == "__main__":
+    handle_chuzhe()
