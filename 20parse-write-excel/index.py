@@ -1,6 +1,6 @@
 import xlrd
 
-MAX_ROWS = 1625
+MAX_ROWS = 10000
 
 import xlwt
 from datetime import datetime
@@ -254,6 +254,94 @@ def change_zongbiao():
     wb.save('zong.xls')
 
 
+def find_chanhou42_new(bianhao_find):
+    data = xlrd.open_workbook('产后42天(1).xls')
+    table = data.sheets()[0]
+    nrows = table.nrows
+    for i in range(nrows):
+        if i > 1:
+            row_data = table.row_values(i)
+            bianhao = row_data[0]
+            yisheng = row_data[3]
+            riqi = row_data[2]
+            name = row_data[1]
+
+            if str(bianhao) == bianhao_find:
+                # print(bianhao, bianhao_find, yisheng, riqi, len(row_data))
+                yield [bianhao, yisheng, riqi, name]
+
+
+def find_chanhoufangshi_new(bianhao_find):
+    data = xlrd.open_workbook('产后访视.xls')
+    table = data.sheets()[0]
+    nrows = table.nrows
+    for i in range(nrows):
+        if i > 1:
+            row_data = table.row_values(i)
+            bianhao = row_data[0]
+            yisheng = row_data[3]
+            riqi = row_data[2]
+            name = row_data[1]
+
+            if str(bianhao) == bianhao_find:
+                # print(bianhao, bianhao_find, yisheng, riqi, len(row_data))
+                yield [bianhao, yisheng, riqi, name]
+
+
+def find_fuzhen_new(bianhao_find):
+    data = xlrd.open_workbook('综合查询_复诊导出.xls')
+    table = data.sheets()[0]
+    nrows = table.nrows
+    for i in range(nrows):
+        if i > 1:
+            row_data = table.row_values(i)
+            yunzhou = float(row_data[3])
+            bianhao = row_data[0]
+            yisheng = row_data[4]
+            riqi = row_data[2]
+            name = row_data[1]
+            if str(bianhao) == bianhao_find:
+                # print(bianhao, bianhao_find, yunzhou, yisheng, riqi, len(row_data))
+                yield [bianhao, yisheng, riqi, name]
+
+
+def change_zongbiao_new():
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet('Sheet0')
+
+    header_length = 1
+    data = xlrd.open_workbook('基本公共卫生服务222.xls')
+    table = data.sheets()[0]
+    nrows = table.nrows
+    row = 0
+    for i in range(nrows):
+        if header_length - 1 < i < MAX_ROWS:
+            row_data = table.row_values(i)
+            base_col_length = 8
+            bianhao = row_data[1]
+
+            chanhoufanggshi = list(find_chanhoufangshi_new(bianhao))
+            chanhou42 = list(find_chanhou42_new(bianhao))
+            fuzhens = list(find_fuzhen_new(bianhao))
+
+            total = chanhoufanggshi + chanhou42 + fuzhens
+            total.sort(key=lambda array: array[2], reverse=False)
+
+            print(i, '/', nrows, ' total', total)
+
+            # print(fuzhens)
+            for j in range(base_col_length):
+                ws.write(row, j, row_data[j])
+            row += 1
+            for fuzhen in fuzhens:
+                # print(fuzhen)
+                ws.write(row, base_col_length - 2 + 0, fuzhen[2])
+                ws.write(row, base_col_length - 2 + 1, fuzhen[1])
+                row += 1
+
+    wb.save('zong.xls')
+
+
 if __name__ == "__main__":
     # handle_chuzhe('42112611401901003')
     # write_zongbiao_zaoyun()
@@ -261,4 +349,5 @@ if __name__ == "__main__":
     # write_zongbiao_wanyun()
     # write_zongbiao_chanhou42()
     # write_zongbiao_fangshi()
-    change_zongbiao()
+    # change_zongbiao()
+    change_zongbiao_new()

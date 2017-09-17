@@ -24,7 +24,7 @@ def get_vm_list():
     for line in lines:
         if not find_data and line.strip().startswith("---"):
             find_data = True
-            continue;
+            continue
         if find_data:
             datas = line.split("|")
             vm = datas[len(datas) - 1].strip()
@@ -73,6 +73,11 @@ def read_a_char():
 
 
 def start_vm(num):
+    try:
+        num = int(num)
+    except:
+        print_no_newline('invalid num:')
+        return False
     if type(num) is not int or (num < 0 or num >= len(vms)):
         print_no_newline('invalid num:')
     else:
@@ -107,6 +112,8 @@ if __name__ == "__main__":
             print_no_newline('refreshing...')
             get_vm_list_and_cache()
             print(' done!')
+            while not start_vm(ch):
+                ch = read_a_char()
         else:
             while not start_vm(ch):
-                pass
+                ch = read_a_char()
